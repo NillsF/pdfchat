@@ -9,6 +9,7 @@ from langchain_openai import AzureChatOpenAI
 from langchain.schema import (HumanMessage)
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
+from langchain_mistralai.chat_models import ChatMistralAI
 
 #from langchain.llms import AzureOpenAI
 
@@ -29,8 +30,8 @@ OPENAI_MODEL_NAME = os.getenv("OPENAI_MODEL_NAME")
 OPENAI_EMBEDDING_DEPLOYMENT_NAME = os.getenv("OPENAI_EMBEDDING_DEPLOYMENT_NAME")
 OPENAI_EMBEDDING_MODEL_NAME = os.getenv("OPENAI_EMBEDDING_MODEL_NAME")
 OPENAI_DEPLOYMENT_VERSION = os.getenv("OPENAI_DEPLOYMENT_VERSION")
-
-
+MISTRAL_KEY = os.getenv("MISTRAL_KEY")
+MISTRAL_ENDPOINT = os.getenv("MISTRAL_ENDPOINT")
 #init Azure OpenAI
 #openai.api_type = "azure"
 #openai.api_version = "2023-05-15"  # subject to change
@@ -43,7 +44,18 @@ embeddings = AzureOpenAIEmbeddings(azure_endpoint=AZURE_OPENAI_ENDPOINT,azure_de
 
 # define llm
 #llm = ChatOpenAI(verbose=True, client=None, temperature=0)
-llm = AzureChatOpenAI(azure_deployment=OPENAI_DEPLOYMENT_NAME, model=OPENAI_MODEL_NAME, temperature=0.7, openai_api_version="2023-05-15")
+
+# llm = AzureChatOpenAI(
+#     azure_deployment=OPENAI_DEPLOYMENT_NAME,
+#     model=OPENAI_MODEL_NAME, 
+#     temperature=0.7, 
+#     openai_api_version="2023-05-15"
+# )
+llm = ChatMistralAI(
+    endpoint=MISTRAL_ENDPOINT,
+    mistral_api_key=MISTRAL_KEY,
+)
+
 
 # memory for chatbot
 memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True, output_key="answer")
